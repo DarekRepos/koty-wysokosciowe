@@ -2,11 +2,11 @@
 ;;Author: Dariusz Duda
 ;;dudawebsite.com
 ;;Description: Wtyczka do tworzenia bloków dynamicznych kot dla przekrojów poprzecznych drogi
-(defun c:kp (/		    FirstAltitude  NextAltitude
-	     NApositionY    FApositionY	   NApositionX
-	     FApositionX    OffsetY	   OffsetX
-	     vals
-	    )
+(defun c:klp (/		     FirstAltitude  NextAltitude
+	      NApositionY    FApositionY    NApositionX
+	      FApositionX    OffsetY	    OffsetX
+	      vals
+				)
   (vl-load-com)
 
   (LM:insertwithstate
@@ -17,121 +17,121 @@
   (setq FirstAltitude (vlax-ename->vla-object (entlast)))
 
   ;;Set default Value at First Altitude 
-  (setq	*ans*
-	 (cond
-	   (
-	    (getreal
-	      (strcat "\nWpisz wysokosc odniesienia w metrach <"
-		      (rtos
-			(setq *ans*
-			       (cond (*ans
-				      (0.00)
-				     )
-			       )
-			)
-			">: "
-		      )
+  (setq *ans*
+     (cond
+       (
+	     (getreal
+	       (strcat "\nWpisz wysokosc odniesienia w metrach <"
+		     (rtos
+		        (setq *ans*
+			      (cond (*ans*)
+				          (0.00)				        
+			      )
+		        )
+		      ">: "
+		     )
 	      )
-	    )
-	    (*ans*)
 	   )
-	 )
-
-	(LM:vl-setattributevalue
-	  FirstAltitude
-	  "TEXT"
-	  "Odniesienie"
-	)
-	 (LM:vl-setattributevalue
-	   FirstAltitude
-	   "HEIGHT"
-	   (strcat (rtos *ans* 2 2) "m")
-	 )
-
-	(while (and (setq vals (grread 't)) (not (equal vals '(2 13))))
-
-	   
-
-	       (LM:insertwithstate
-		 "Kota-mm"
-		 "Underline NO   | Wipeout NO"
-	       )
-	  (setq NextAltitude (vlax-ename->vla-object (entlast)))
-	  (setq	NApositionY
-		 (strcat
-		   "%<\\AcObjProp Object(%<\\_ObjId "
-		   (LM:ObjectID NextAltitude)
-		   ">%).InsertionPoint \\f \""
-		   "%lu2%pt2%pr3"
-		   ">%"
-		   " - "
-		   ;;minus First Altitude at position Y 
-		 )
-	  )
-	  (setq	FApositionY
-		 (strcat
-		   "%<\\AcObjProp Object(%<\\_ObjId "
-		   (LM:ObjectID FirstAltitude)
-		   ">%).InsertionPoint \\f \""
-		   "%lu2%pt2%pr3%"
-		   ">%"
-		   " + "
-		   ;;plus constant
-		   (rtos *ans*)
-		   ;;value at First Altitude = constant
-		 )
-	  )
-	  (setq	NApositionX
-		 (strcat
-		   "%<\\AcObjProp Object(%<\\_ObjId "
-		   (LM:ObjectID NextAltitude)
-		   ">%).InsertionPoint \\f \""
-		   "%lu2%pt1%pr3"
-		   ">%"
-		   " - "
-		   ;;minus First Altitude at position X 
-		 )
-	  )
-	  (setq	FApositionX
-		 (strcat
-		   "%<\\AcObjProp Object(%<\\_ObjId "
-		   (LM:ObjectID FirstAltitude)
-		   ">%).InsertionPoint \\f \""
-		   "%lu2%pt1%pr3"
-		   ">%"
-		 )
-	  )
-	  (setq	OffsetY
-		 (strcat
-		   "%<\\AcExpr "
-		   (strcat NApositionY FApositionY)
-		   " \\f \""
-		   "%lu2%pr2%ds44"
-		   "\">%"
-		 )
-	  )
-	  (setq	OffsetX
-		 (strcat
-		   "%<\\AcExpr "
-		   (strcat NApositionX FApositionX)
-		   " \\f \""
-		   "%lu2%pr2%ds44"
-		   "\">%"
-		 )
-	  )
-	  (LM:vl-setattributevalue
-	    NextAltitude
-	    "HEIGHT"
-	    OffsetY
-	  )
-	  (LM:vl-setattributevalue
-	    NextAltitude
-	    "TEXT"
-	    OffsetX
-	  )
-	  (command "_.REGEN")
-	)
+	    (*ans*)
+     )
   )
+  )
+
+    (LM:vl-setattributevalue
+      FirstAltitude
+      "TEXT"
+      "Odniesienie"
+    )
+     (LM:vl-setattributevalue
+       FirstAltitude
+       "HEIGHT"
+       (strcat (rtos *ans* 2 2) "m")
+     )
+
+    (while (and (setq vals (grread 't)) (not (equal vals '(2 13))))
+
+
+      (LM:insertwithstate
+	"Kota-mm"
+	"Underline NO   | Wipeout NO"
+      )
+      (setq NextAltitude (vlax-ename->vla-object (entlast)))
+      (setq NApositionY
+	     (strcat
+	       "%<\\AcObjProp Object(%<\\_ObjId "
+	       (LM:ObjectID NextAltitude)
+	       ">%).InsertionPoint \\f \""
+	       "%lu2%pt2%pr3"
+	       ">%"
+	       " - "
+	       ;;minus First Altitude at position Y 
+	     )
+      )
+      (setq FApositionY
+	     (strcat
+	       "%<\\AcObjProp Object(%<\\_ObjId "
+	       (LM:ObjectID FirstAltitude)
+	       ">%).InsertionPoint \\f \""
+	       "%lu2%pt2%pr3%"
+	       ">%"
+	       " + "
+	       ;;plus constant
+	       (rtos *ans*)
+	       ;;value at First Altitude = constant
+	     )
+      )
+      (setq NApositionX
+	     (strcat
+	       "%<\\AcObjProp Object(%<\\_ObjId "
+	       (LM:ObjectID NextAltitude)
+	       ">%).InsertionPoint \\f \""
+	       "%lu2%pt1%pr3"
+	       ">%"
+	       " - "
+	       ;;minus First Altitude at position X 
+	     )
+      )
+      (setq FApositionX
+	     (strcat
+	       "%<\\AcObjProp Object(%<\\_ObjId "
+	       (LM:ObjectID FirstAltitude)
+	       ">%).InsertionPoint \\f \""
+	       "%lu2%pt1%pr3"
+	       ">%"
+	     )
+      )
+      (setq OffsetY
+	     (strcat
+	       "%<\\AcExpr "
+	       (strcat NApositionY FApositionY)
+	       " \\f \""
+	       "%lu2%pr2%ds44"
+	       "\">%"
+	     )
+      )
+      (setq OffsetX
+	     (strcat
+	       "%<\\AcExpr "
+	       (strcat NApositionX FApositionX)
+	       " \\f \""
+	       "%lu2%pr2%ds44"
+	       "\">%"
+	     )
+      )
+      (LM:vl-setattributevalue
+	NextAltitude
+	"HEIGHT"
+	OffsetY
+      )
+      (LM:vl-setattributevalue
+	NextAltitude
+	"TEXT"
+	OffsetX
+      )
+      (command "_.REGEN")
+    
+  )
+
   ;; ObjectID - Lee Mac
   ;; Returns a string containing the ObjectID of a supplied VLA-Object
   ;; Compatible with 32-bit & 64-bit systems
