@@ -1,8 +1,8 @@
  ;;Program Name: Etykiety Civil
  ;;Author: Dariusz Duda
  ;;dudawebsite.com
- ;;Description: Wtyczka do tworzenia etykiet dla przekrojów poprzecznych drogi
-(defun c:kp (/ FirstAltitude NextAltitude NApositionY FApositionY NApositionX FApositionX OffsetY OffsetX)
+ ;;Description: Wtyczka do tworzenia bloków dynamicznych kot dla przekrojów poprzecznych drogi
+(defun c:kp (/ FirstAltitude NextAltitude NApositionY FApositionY NApositionX FApositionX OffsetY OffsetX values)
   (vl-load-com)
 
   (LM:insertwithstate
@@ -44,8 +44,9 @@
     (strcat (rtos *ans* 2 2) "m")
   )
 
-  (while
+  (while (and (setq values (grread 't)) (/= (car values) 3)
 
+	(if (and (cadr values) (= (car values) 5))
     (LM:insertwithstate
       "Kota-mm"
       "Underline NO   | Wipeout NO"
