@@ -46,7 +46,8 @@
 
   (while (and (setq values (grread 't)) (/= (car values) 3)
 
-	(if (and (cadr values) (= (car values) 5))
+	(if (and (cadr values) (= (car values) 5)))
+
     (LM:insertwithstate
       "Kota-mm"
       "Underline NO   | Wipeout NO"
