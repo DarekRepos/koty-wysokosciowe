@@ -13,25 +13,26 @@
 	(setq FirstAltitude (vlax-ename->vla-object (entlast)))
 
 	;;Set default Value at First Altitude 
-		(setq *ans*
-			(cond
-				(
-					(getreal
-						(strcat "\nWpisz wysokosc odniesienia w metrach <"
-							(rtos
-								(setq *ans*
-									 (cond (*ans*)
-											 (0.00)				        
-									)
-								)
-								     ">: "
-							)
-						)
-					)
-					(*ans*)
-				)
+		
+  (setq	*ans*
+	 (cond
+	   (
+	    (getreal
+	      (strcat "\nWpisz wysokosc odniesienia w metrach <"
+		      (rtos
+			(setq *ans*
+			       (cond (*ans*)
+				     (0.00)
+			       )
 			)
-		)
+		      )
+		      ">: "
+	      )
+	    )
+	   )
+	   (*ans*)
+	 )
+  )
 
     (LM:vl-setattributevalue
       FirstAltitude
