@@ -18,7 +18,11 @@ blok powinien posiadaæ tak¿e 2 atrybuty o nazwach :
     "HEIGHT"
 ## URUCHAMIANIANIE
 Po za³adowaniu programu do AutoCAD'a nale¿y wpisaæ skrót polecenia 
->klp
+>klp     - KOTY-POPRZECZKI.LSP
+
+>jd      - KOTY-PROFIL.LSP
+
+
 
 Aby wyjsc z programu nale¿y wcisn¹æ klawisz
 >Esc

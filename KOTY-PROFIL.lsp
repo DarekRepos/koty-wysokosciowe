@@ -72,7 +72,6 @@
 		)
      )
 
-
      (setq atty
 	    (strcat
 	      "%<\\AcExpr "
