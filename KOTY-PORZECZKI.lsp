@@ -44,7 +44,7 @@
     (strcat (rtos *ans* 2 2) "m")
   )
 
-  (while (and (setq values (grread 't)) (/= (car values) 3)
+  (while (and (setq values (grread 't)) (/= (car values) 3))
 
 	(if (and (cadr values) (= (car values) 5)))
 
