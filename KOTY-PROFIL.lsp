@@ -1,6 +1,6 @@
 ;;Main program
 ;;Dariusz Duda dudawebsite.com
-(defun c:jd (/ ss inc lst att fmt fmt2 sspin ppp)
+(defun c:jd (/ FirstAltitude NextAltitude NApositionY atty)
   (vl-load-com)
  
   (LM:insertwithstate
@@ -8,7 +8,7 @@
     "Underline YES | Wipeout YES"
   )
 
-  (setq ss (vlax-ename->vla-object (entlast)))
+  (setq FirstAltitude (vlax-ename->vla-object (entlast)))
 
   (setq	*ans*
 	 (cond
@@ -31,12 +31,12 @@
   )
 
   (LM:vl-setattributevalue
-    ss
+    FirstAltitude
     "TEXT"
     "Odniesienie"
   )
   (LM:vl-setattributevalue
-    ss
+    FirstAltitude
     "HEIGHT"
     (strcat (rtos *ans*) "m")
   )
@@ -48,21 +48,21 @@
       "Underline NO   | Wipeout NO"
     )
 
-     (setq sspin (vlax-ename->vla-object (entlast)))
+     (setq NextAltitude (vlax-ename->vla-object (entlast)))
 
-     (setq ppp (strcat
+     (setq NApositionY (strcat
 		" ( "
 		 "%<\\AcObjProp Object(%<\\_ObjId "
-		 (LM:ObjectID sspin)
+		 (LM:ObjectID NextAltitude)
 		 ">%).InsertionPoint \\f \""
 		 "%lu2%pt2%pr3"
 		 ">%"
 		 " - "
 	       )
      )
-     (setq ppp2	(strcat
+     (setq FApositionY	(strcat
 		  "%<\\AcObjProp Object(%<\\_ObjId "
-		  (LM:ObjectID ss)
+		  (LM:ObjectID FirstAltitude)
 		  ">%).InsertionPoint \\f \""
 		  "%lu2%pt2%pr3%"
 		  ">%"
@@ -72,63 +72,24 @@
 		)
      )
 
-     ;;(setq xppp	(strcat
-	;;	  "%<\\AcObjProp Object(%<\\_ObjId "
-	;;	  (LM:ObjectID sspin)
-	;;	  ">%).InsertionPoint \\f \""
-	;;	  "%lu2%pt1%pr3"
-	;;	  ">%"
-	;;	  " - "
-	;;	)
-    ;; )
-     ;;(setq xppp2 (strcat
-	;;	   "%<\\AcObjProp Object(%<\\_ObjId "
-	;;	   (LM:ObjectID ss)
-	;;	   ">%).InsertionPoint \\f \""
-	;;	   "%lu2%pt1%pr3"
-	;;	   ">%"
-	;;	 )
-     ;;)
-
-     (setq lst '(ppp ppp2))
-     ;;(setq lst2 '(xppp xppp2))
 
      (setq atty
 	    (strcat
 	      "%<\\AcExpr "
-	      (strcat ppp ppp2)
+	      (strcat ppNApositionYp FApositionY)
 	      " \\f \""
 	      "%lu2%pr2%ds44"
 	      "\">%"
 	    )
      )
 
-     ;;(setq attX
-	;;    (strcat
-	 ;;     "%<\\AcExpr "
-	 ;;     (strcat xppp xppp2)
-	 ;;     " \\f \""
-	 ;;     "%lu2%pr2%ds44"
-	 ;;     "\">%"
-	 ;;   )
-    ;; )
-
      (LM:vl-setattributevalue
-       sspin
+       NextAltitude
        "HEIGHT"
        atty
      )
-     ;;(LM:vl-setattributevalue
-     ;;  sspin
-     ;;  "TEXT"
-     ;;  attX
-     ;;)
-
      (command "_.REGEN")
-
-
   )
-
 )
 ;; ObjectID - Lee Mac
 ;; Returns a string containing the ObjectID of a supplied VLA-Object
@@ -272,7 +233,7 @@
 	   cmd (getvar 'cmdecho)
      )
      (setvar 'cmdecho 0)
-     (princ "\nWybierz punkt wstawienia: \n")
+     (princ "\nWybierz punkt wstawienia: [or ESC]\n")
      (if
        (and
 	 (vl-cmdf "_.-insert" blk "_S" 1.0 "_R" 0.0 "\\")

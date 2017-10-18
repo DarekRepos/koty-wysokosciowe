@@ -2,7 +2,7 @@
 ;;Author: Dariusz Duda
 ;;dudawebsite.com
 ;;Description: Wtyczka do tworzenia bloków dynamicznych kot dla przekrojów poprzecznych drogi
-(defun c:klp (/ FirstAltitude  NextAltitude NApositionY  FApositionY NApositionX FApositionX OffsetY OffsetX vals)
+(defun c:klp (/ FirstAltitude  NextAltitude NApositionY  FApositionY NApositionX FApositionX OffsetY OffsetX)
 	(vl-load-com)
 
 	(LM:insertwithstate
