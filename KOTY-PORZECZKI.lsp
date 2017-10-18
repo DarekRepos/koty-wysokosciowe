@@ -1,41 +1,37 @@
 ;;Program Name: Etykiety Civil
 ;;Author: Dariusz Duda
 ;;dudawebsite.com
-;;Description: Wtyczka do tworzenia bloków dynamicznych kot dla przekrojów poprzecznych drogi
-(defun c:klp (/		     FirstAltitude  NextAltitude
-	      NApositionY    FApositionY    NApositionX
-	      FApositionX    OffsetY	    OffsetX
-	      vals
+;;Description: Wtyczka do tworzenia blokÃ³w dynamicznych kot dla przekrojÃ³w poprzecznych drogi
+(defun c:klp (/ FirstAltitude  NextAltitude NApositionY  FApositionY NApositionX FApositionX OffsetY OffsetX vals)
+	(vl-load-com)
+
+	(LM:insertwithstate
+		"Kota-mm"
+		"Underline YES | Wipeout YES"
+	)
+
+	(setq FirstAltitude (vlax-ename->vla-object (entlast)))
+
+	;;Set default Value at First Altitude 
+		(setq *ans*
+			(cond
+				(
+					(getreal
+						(strcat "\nWpisz wysokosc odniesienia w metrach <"
+							(rtos
+								(setq *ans*
+									 (cond (*ans*)
+											 (0.00)				        
+									)
+								)
+								">: "
+							)
+						)
+					)
+					(*ans*)
 				)
-  (vl-load-com)
-
-  (LM:insertwithstate
-    "Kota-mm"
-    "Underline YES | Wipeout YES"
-  )
-
-  (setq FirstAltitude (vlax-ename->vla-object (entlast)))
-
-  ;;Set default Value at First Altitude 
-  (setq *ans*
-     (cond
-       (
-	     (getreal
-	       (strcat "\nWpisz wysokosc odniesienia w metrach <"
-		     (rtos
-		        (setq *ans*
-			      (cond (*ans*)
-				          (0.00)				        
-			      )
-		        )
-		      ">: "
-		     )
-	      )
-	   )
-	  (*ans*)
-     )
-  )
-  )
+			)
+		)
 
     (LM:vl-setattributevalue
       FirstAltitude
@@ -52,8 +48,8 @@
 
 
       (LM:insertwithstate
-	"Kota-mm"
-	"Underline NO   | Wipeout NO"
+		"Kota-mm"
+		"Underline NO   | Wipeout NO"
       )
       (setq NextAltitude (vlax-ename->vla-object (entlast)))
       (setq NApositionY
@@ -119,24 +115,23 @@
 	     )
       )
       (LM:vl-setattributevalue
-	NextAltitude
-	"HEIGHT"
-	OffsetY
+	     NextAltitude
+	     "HEIGHT"
+	     OffsetY
       )
       (LM:vl-setattributevalue
-	NextAltitude
-	"TEXT"
-	OffsetX
+		NextAltitude
+	    "TEXT"
+	    OffsetX
       )
       (command "_.REGEN")
-    
-  )
-
+ )
+)
   ;; ObjectID - Lee Mac
   ;; Returns a string containing the ObjectID of a supplied VLA-Object
   ;; Compatible with 32-bit & 64-bit systems
 
-  (defun LM:ObjectID (obj)
+(defun LM:ObjectID (obj)
     (eval
       (list 'defun
 	    'LM:ObjectID
@@ -159,7 +154,7 @@
       )
     )
     (LM:ObjectID obj)
-  )
+ )
   ;; Set Attribute Value  -  Lee Mac
   ;; Sets the value of the first attribute with the given tag found within the block, if present.
   ;; blk - [vla] VLA Block Reference Object
@@ -167,17 +162,17 @@
   ;; val - [str] Attribute Value
   ;; Returns: [str] Attribute value if successful, else nil.
 
-  (defun LM:vl-setattributevalue (blk tag val)
-    (setq tag (strcase tag))
-    (vl-some
-      '(lambda (att)
-	 (if (= tag (strcase (vla-get-tagstring att)))
-	   (progn (vla-put-textstring att val) val)
-	 )
+(defun LM:vl-setattributevalue (blk tag val)
+  (setq tag (strcase tag))
+  (vl-some
+    '(lambda (att)
+       (if (= tag (strcase (vla-get-tagstring att)))
+	 (progn (vla-put-textstring att val) val)
        )
-      (vlax-invoke blk 'getattributes)
-    )
+     )
+    (vlax-invoke blk 'getattributes)
   )
+)
 
   ;; Insert With Visibility State - Lee Mac
   ;; Provides an interface through which the user can insert a dynamic block
@@ -185,7 +180,7 @@
   ;; blk - [str] Block name, filename or full filepath
   ;; vis - [str] Visibility State to set on insertion
   ;; Returns: [vla] Inserted VLA block reference object, else nil if unsuccessful
-  (defun LM:insertwithstate
+(defun LM:insertwithstate
 	 (blk vis / bse cmd def ent ext new obj pth rtn tmp)
     (setq pth (vl-string-translate "/" "\\" (vl-filename-directory blk))
 	  ext (cond ((vl-filename-extension blk))
@@ -294,122 +289,120 @@
       )
     )
     rtn
-  )
-  ;; Get Visibility Parameter Name - Lee Mac
-  ;; Returns the name of the Visibility Parameter of a Dynamic Block (if present)
-  ;; blk - [vla] VLA Dynamic Block Reference object
-  ;; Returns: [str] Name of Visibility Parameter, else nil
-  (defun LM:getvisibilityparametername (blk / vis)
-    (if
-      (and
-	(vlax-property-available-p blk 'effectivename)
-	(setq blk
-	       (vla-item
-		 (vla-get-blocks (vla-get-document blk))
-		 (vla-get-effectivename blk)
-	       )
-	)
-	(= :vlax-true (vla-get-isdynamicblock blk))
-	(= :vlax-true (vla-get-hasextensiondictionary blk))
-	(setq vis
-	       (vl-some
-		 '(lambda (pair)
-		    (if
-		      (and
-			(= 360 (car pair))
-			(= "BLOCKVISIBILITYPARAMETER"
-			   (cdr (assoc 0 (entget (cdr pair))))
-			)
+)
+;; Get Visibility Parameter Name - Lee Mac
+;; Returns the name of the Visibility Parameter of a Dynamic Block (if present)
+;; blk - [vla] VLA Dynamic Block Reference object
+;; Returns: [str] Name of Visibility Parameter, else nil
+(defun LM:getvisibilityparametername (blk / vis)
+  (if
+    (and
+      (vlax-property-available-p blk 'effectivename)
+      (setq blk
+	     (vla-item
+	       (vla-get-blocks (vla-get-document blk))
+	       (vla-get-effectivename blk)
+	     )
+      )
+      (= :vlax-true (vla-get-isdynamicblock blk))
+      (= :vlax-true (vla-get-hasextensiondictionary blk))
+      (setq vis
+	     (vl-some
+	       '(lambda	(pair)
+		  (if
+		    (and
+		      (= 360 (car pair))
+		      (= "BLOCKVISIBILITYPARAMETER"
+			 (cdr (assoc 0 (entget (cdr pair))))
 		      )
-		       (cdr pair)
 		    )
+		     (cdr pair)
 		  )
-		 (dictsearch
-		   (vlax-vla-object->ename (vla-getextensiondictionary blk))
-		   "acad_enhancedblock"
-		 )
-	       )
-	)
-      )
-       (cdr (assoc 301 (entget vis)))
-    )
-  )
-  ;; Set Dynamic Block Visibility State - Lee Mac
-  ;; Sets the Visibility Parameter of a Dynamic Block to a specific value
-  ;; blk - [vla] VLA Dynamic Block Reference object
-  ;; val - [str] Visibility State Parameter value
-  ;; Returns: [str] New value of Visibility Parameter, else nil
-  (defun LM:SetVisibilityState (blk val / vis)
-    (if
-      (and
-	(setq vis (LM:getvisibilityparametername blk))
-	(member
-	  (strcase val)
-	  (mapcar 'strcase (LM:getdynpropallowedvalues blk vis))
-	)
-      )
-       (LM:setdynpropvalue blk vis val)
-    )
-  )
-
-  ;; Get Dynamic Block Property Allowed Values  -  Lee Mac
-  ;; Returns the allowed values for a specific Dynamic Block property.
-  ;; blk - [vla] VLA Dynamic Block Reference object
-  ;; prp - [str] Dynamic Block property name (case-insensitive)
-  ;; Returns: [lst] List of allowed values for property, else nil if no restrictions
-
-  (defun LM:getdynpropallowedvalues (blk prp)
-    (setq prp (strcase prp))
-    (vl-some '(lambda (x)
-		(if (= prp (strcase (vla-get-propertyname x)))
-		  (vlax-get x 'allowedvalues)
 		)
-	      )
-	     (vlax-invoke blk 'getdynamicblockproperties)
-    )
-  )
-  ;; Set Dynamic Block Property Value  -  Lee Mac
-  ;; Modifies the value of a Dynamic Block property (if present)
-  ;; blk - [vla] VLA Dynamic Block Reference object
-  ;; prp - [str] Dynamic Block property name (case-insensitive)
-  ;; val - [any] New value for property
-  ;; Returns: [any] New value if successful, else nil
-
-  (defun LM:setdynpropvalue (blk prp val)
-    (setq prp (strcase prp))
-    (vl-some
-      '(lambda (x)
-	 (if (= prp (strcase (vla-get-propertyname x)))
-	   (progn
-	     (vla-put-value
-	       x
-	       (vlax-make-variant
-		 val
-		 (vlax-variant-type (vla-get-value x))
+	       (dictsearch
+		 (vlax-vla-object->ename (vla-getextensiondictionary blk))
+		 "acad_enhancedblock"
 	       )
 	     )
-	     (cond (val)
-		   (t)
+      )
+    )
+     (cdr (assoc 301 (entget vis)))
+  )
+)
+;; Set Dynamic Block Visibility State - Lee Mac
+;; Sets the Visibility Parameter of a Dynamic Block to a specific value
+;; blk - [vla] VLA Dynamic Block Reference object
+;; val - [str] Visibility State Parameter value
+;; Returns: [str] New value of Visibility Parameter, else nil
+(defun LM:SetVisibilityState (blk val / vis)
+  (if
+    (and
+      (setq vis (LM:getvisibilityparametername blk))
+      (member
+	(strcase val)
+	(mapcar 'strcase (LM:getdynpropallowedvalues blk vis))
+      )
+    )
+     (LM:setdynpropvalue blk vis val)
+  )
+)
+
+;; Get Dynamic Block Property Allowed Values  -  Lee Mac
+;; Returns the allowed values for a specific Dynamic Block property.
+;; blk - [vla] VLA Dynamic Block Reference object
+;; prp - [str] Dynamic Block property name (case-insensitive)
+;; Returns: [lst] List of allowed values for property, else nil if no restrictions
+
+(defun LM:getdynpropallowedvalues (blk prp)
+  (setq prp (strcase prp))
+  (vl-some '(lambda (x)
+	      (if (= prp (strcase (vla-get-propertyname x)))
+		(vlax-get x 'allowedvalues)
+	      )
+	    )
+	   (vlax-invoke blk 'getdynamicblockproperties)
+  )
+)
+;; Set Dynamic Block Property Value  -  Lee Mac
+;; Modifies the value of a Dynamic Block property (if present)
+;; blk - [vla] VLA Dynamic Block Reference object
+;; prp - [str] Dynamic Block property name (case-insensitive)
+;; val - [any] New value for property
+;; Returns: [any] New value if successful, else nil
+
+(defun LM:setdynpropvalue (blk prp val)
+  (setq prp (strcase prp))
+  (vl-some
+    '(lambda (x)
+       (if (= prp (strcase (vla-get-propertyname x)))
+	 (progn
+	   (vla-put-value
+	     x
+	     (vlax-make-variant
+	       val
+	       (vlax-variant-type (vla-get-value x))
 	     )
+	   )
+	   (cond (val)
+		 (t)
 	   )
 	 )
        )
-      (vlax-invoke blk 'getdynamicblockproperties)
-    )
+     )
+    (vlax-invoke blk 'getdynamicblockproperties)
   )
-  ;; Active Document - Lee Mac
-  ;; Returns the VLA Active Document Object
-  (defun LM:acdoc nil
-    (eval
-      (list 'defun
-	    'LM:acdoc
-	    'nil
-	    (vla-get-activedocument (vlax-get-acad-object))
-      )
-    )
-    (LM:acdoc)
-  )
-  (vl-load-com)
-  (princ)
-
 )
+;; Active Document - Lee Mac
+;; Returns the VLA Active Document Object
+(defun LM:acdoc	nil
+  (eval
+    (list 'defun
+	  'LM:acdoc
+	  'nil
+	  (vla-get-activedocument (vlax-get-acad-object))
+    )
+  )
+  (LM:acdoc)
+)
+(vl-load-com)
+(princ)
