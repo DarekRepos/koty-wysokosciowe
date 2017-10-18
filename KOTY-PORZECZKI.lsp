@@ -271,7 +271,7 @@
 	     cmd (getvar 'cmdecho)
        )
        (setvar 'cmdecho 0)
-       (princ "\nWybierz punkt wstawienia: \n")
+       (princ "\nWybierz punkt wstawienia: [or ESC]\n")
        (if
 	 (and
 	   (vl-cmdf "_.-insert" blk "_S" 1.0 "_R" 0.0 "\\")
