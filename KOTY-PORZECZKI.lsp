@@ -14,25 +14,25 @@
 
 	;;Set default Value at First Altitude 
 		
-  (setq	*ans*
-	 (cond
-	   (
-	    (getreal
-	      (strcat "\nWpisz wysokosc odniesienia w metrach <"
+    (setq	*ans*
+	  (cond
+	    (
+	      (getreal
+	        (strcat "\nWpisz wysokosc odniesienia w metrach <"
 		      (rtos
-			(setq *ans*
+			    (setq *ans*
 			       (cond (*ans*)
-				     (0.00)
+						 (0.00)
 			       )
-			)
+			    )
 		      )
 		      ">: "
+	        )
 	      )
-	    )
 	   )
 	   (*ans*)
 	 )
-  )
+   )
 
     (LM:vl-setattributevalue
       FirstAltitude
@@ -45,8 +45,7 @@
        (strcat (rtos *ans* 2 2) "m")
      )
 
-    (while (and (setq vals (grread 't)) (not (equal vals '(2 13))))
-
+    (while  
 
       (LM:insertwithstate
 		"Kota-mm"
