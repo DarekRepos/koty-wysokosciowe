@@ -1,28 +1,29 @@
-# PROGRAM KOTY WYSOKOŒCIOWE
+# PROGRAM KOTY WYSOKOÅšCIOWE
+program do wstawiania kot wysokoÅ›ciowych w AutoCadzie dla potrzeb projektu drogowego w polskich standardach, ktÃ³ry dziaÅ‚a takÅ¼e na starszych wersjach. 
 
 ## WYMAGANIA
-Program powinien uruchamiaæ siê na wersjach 32-bit  oraz 64-bit
-. Do u¿ytkowania programu wymagane jest wstawienie bloku dynamiczbego o nazwie :
+Program powinien uruchamiaÄ‡ siÄ™ na wersjach 32-bit  oraz 64-bit AutoCAD ( Program dziaÅ‚a nie tylko w wersji AutoCAD Civil 3D). Do uÅ¼ytkowania programu wymagane jest wstawienie bloku dynamiczbego o nazwie :
 
 >"Kota-mm"
 
-blok powinien posiadaæ 2 stany widocznoœci [Visibility States.] :
+blok powinien posiadaÄ‡ 2 stany widocznoÅ›ci [Visibility States.] :
 
     "Underline YES | Wipeout YES"
 
     "Underline NO  | Wipeout NO"
 
-blok powinien posiadaæ tak¿e 2 atrybuty o nazwach :
+blok powinien posiadaÄ‡ takÅ¼e 2 atrybuty o nazwach :
 
     "TEXT"
     "HEIGHT"
 ## URUCHAMIANIANIE
-Po za³adowaniu programu do AutoCAD'a nale¿y wpisaæ skrót polecenia 
->klp     - KOTY-POPRZECZKI.LSP
+Po zaÅ‚adowaniu plikÃ³w lisp do programu do AutoCAD'a naleÅ¼y wpisaÄ‡ skrÃ³t polecenia 
 
->jd      - KOTY-PROFIL.LSP
+|    skrÃ³t      |  funkcja       | plik|
+| ------------- |:-------------:| ------------- |
+| klp |  wstawianie bloku koty do poprzeczek     |KOTY-POPRZECZKI.LSP |
+| jd |  wstawianie bloku koty do profilu  | KOTY-PROFIL.LSP |
 
 
-
-Aby wyjsc z programu nale¿y wcisn¹æ klawisz
+Aby wyjsc z programu naleÅ¼y wcisnÄ…Ä‡ klawisz
 >Esc
