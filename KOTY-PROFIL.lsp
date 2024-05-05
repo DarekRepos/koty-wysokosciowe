@@ -1,5 +1,5 @@
 ;;Main program
-;;Dariusz Duda dudawebsite.com
+;;Dariusz Duda darekduda.pl
 (defun c:jd (/ FirstAltitude NextAltitude NApositionY atty)
   (vl-load-com)
  
